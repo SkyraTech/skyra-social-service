@@ -42,6 +42,16 @@ app.get('/health', (req: Request, res: Response) => {
   }
 });
 
+// ── GET / ────────────────────────────────────────────────────────────────
+app.get('/', (req: Request, res: Response) => {
+  res.json({
+    message: "Skyra-Tech Social Media Automation Microservice is online.",
+    documentation: "/health",
+    status: "active"
+  });
+});
+
+
 // ── GET /status ──────────────────────────────────────────────────────────
 app.get('/status', (req: Request, res: Response) => {
   try {
