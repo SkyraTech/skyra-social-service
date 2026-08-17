@@ -45,12 +45,15 @@
 apps/skyra-social-service/
 ├── package.json             ← Node package dependencies
 ├── tsconfig.json            ← TypeScript compilations definitions
+├── vercel.json              ← Vercel serverless function rewrite mappings
+├── api/
+│   └── index.ts             ← Vercel serverless adapter entry point
 ├── .env                     ← Service token configuration
 ├── .gitignore               ← Credentials lock rules
 └── src/
     ├── config.ts            ← Environment loader (port, mock toggles)
     ├── social.ts            ← SocialMediaService (Constraints checks, Promise.allSettled broadcast)
-    └── index.ts             ← Express HTTP routes (CORS, loopback 127.0.0.1)
+    └── index.ts             ← Express HTTP routes (CORS, Vercel check)
 ```
 
 ### Lifecycle Scopes
@@ -65,6 +68,11 @@ apps/skyra-social-service/
 Platform API calls delegate through a mockable interface structure:
 * If mock switches are set to `true` (default), the service writes raw output logs to console stdout and returns simulated post metadata, bypassing actual API calls.
 * When set to `false`, the client executes actual HTTP fetch queries against Twitter, LinkedIn, and Meta graph APIs.
+
+### Vercel Serverless Function Adaptation
+* **Routing Rewrites**: The root `vercel.json` rewrites all routing requests `/.*` to `/api/index.ts`.
+* **Serverless Entrypoint**: `api/index.ts` imports the Express application from `src/index.ts` and exports it as a default serverless function handler.
+* **Conditional Listener**: In `src/index.ts`, port listener `app.listen()` is conditionally bypassed if `process.env.VERCEL` is active, allowing seamless execution in serverless compute environments without port conflicts.
 
 ### API Endpoint Schemas
 
