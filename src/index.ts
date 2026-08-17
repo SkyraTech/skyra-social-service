@@ -137,10 +137,14 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json(formatError(err.message, 'UNHANDLED_EXCEPTION'));
 });
 
-// Start Express Server strictly listening on loopback interface
-app.listen(port, '127.0.0.1', () => {
-  console.log(`\n======================================================`);
-  console.log(`🚀 Skyra-Tech Social Media Service is live!`);
-  console.log(`   Local Server URL: http://127.0.0.1:${port}`);
-  console.log(`======================================================\n`);
-});
+// Start Express Server strictly listening on loopback interface (skipped on Vercel)
+if (!process.env.VERCEL) {
+  app.listen(port, '127.0.0.1', () => {
+    console.log(`\n======================================================`);
+    console.log(`🚀 Skyra-Tech Social Media Service is live!`);
+    console.log(`   Local Server URL: http://127.0.0.1:${port}`);
+    console.log(`======================================================\n`);
+  });
+}
+
+export default app;
